@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Website Utilities with Styles
 // @description Revolutionary 2026 design with bento grid layouts, spatial UI, and kinetic interactions
-// @version     5.1
+// @version     5.3
 // @author      Pratik Chabria
 // @match       *://*/*
 // @grant        GM_xmlhttpRequest
@@ -20,7 +20,7 @@
 // ====================================================================
 
 const UPDATE_CONFIG = {
-    CURRENT_VERSION: '5.1', // Adjust to match your current version
+    CURRENT_VERSION: '5.3', // Adjust to match your current version
     GITHUB_URL: 'https://github.com/lazyasspanda/Website-Utilities/raw/refs/heads/main/Website%20Utilities%20with%20Styles-5.0-New.user.js',
     CHECK_INTERVAL: 6 * 60 * 60 * 1000, // 24 hours
 };
@@ -265,146 +265,163 @@ function checkForUpdates() {
     }
 
           // NEW FUNCTION: Swap between original and custom button sets
-    function swapButtonSets(bentoGrid2, bentoGrid3, dealerId, cmsUrl, showCustom) {
-        // Prevent re-swapping if already in desired state
-        const targetState = showCustom ? 'custom' : 'original';
-        if (currentButtonState === targetState) return;
-        currentButtonState = targetState;
+    // NEW FUNCTION: Swap between original and custom button sets
+function swapButtonSets(bentoGrid2, bentoGrid3, dealerId, cmsUrl, showCustom) {
+    // Prevent re-swapping if already in desired state
+    const targetState = showCustom ? 'custom' : 'original';
+    if (currentButtonState === targetState) return;
+    currentButtonState = targetState;
 
-        // Quick fade
-        bentoGrid2.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
-        bentoGrid3.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
-        bentoGrid2.style.opacity = '0';
-        bentoGrid3.style.opacity = '0';
-        bentoGrid2.style.transform = 'scale(0.97)';
-        bentoGrid3.style.transform = 'scale(0.97)';
+    // Quick fade animation
+    bentoGrid2.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+    bentoGrid3.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+    bentoGrid2.style.opacity = '0';
+    bentoGrid3.style.opacity = '0';
+    bentoGrid2.style.transform = 'scale(0.97)';
+    bentoGrid3.style.transform = 'scale(0.97)';
 
-        // Rebuild immediately
-        bentoGrid2.innerHTML = '';
-        bentoGrid3.innerHTML = '';
+    // Clear the button grids
+    bentoGrid2.innerHTML = '';
+    bentoGrid3.innerHTML = '';
 
-        if (showCustom) {
-            // ---------------- CUSTOM BUTTONS (Dash, Header, TBD x4) ----------------
-            bentoGrid2.style.gridTemplateColumns = 'repeat(3, 1fr)';
-            bentoGrid3.style.gridTemplateColumns = 'repeat(3, 1fr)';
+    if (showCustom) {
+        // Set 3 columns for both grids
+        bentoGrid2.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        bentoGrid3.style.gridTemplateColumns = 'repeat(3, 1fr)';
 
-            const dashButton = document.createElement('button');
-            dashButton.textContent = 'Dash';
-            dashButton.style.cssText = `
+        // Create custom buttons for top row
+        const dashButton = document.createElement('button');
+        dashButton.textContent = 'Dash';
+        dashButton.style.cssText = `
+            padding: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: inherit;
+        `;
+        addButtonHoverEffects(dashButton, 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', '#3b82f6');
+        dashButton.addEventListener('click', () => window.open(cmsUrl, '_blank'));
+
+        const introWidgetButton = document.createElement('button');
+        introWidgetButton.textContent = 'IntroWidget';
+        introWidgetButton.style.cssText = `
+            padding: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: inherit;
+        `;
+        addButtonHoverEffects(introWidgetButton, 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', '#3b82f6');
+        introWidgetButton.addEventListener('click', () => {
+            window.open(`https://cms.dealeron.com/dash/dist/cms/#/${dealerId}/headerWidget`, '_blank');
+        });
+
+        const appstoreButton = document.createElement('button');
+        appstoreButton.textContent = 'Appstore';
+        appstoreButton.style.cssText = `
+            padding: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: inherit;
+        `;
+        addButtonHoverEffects(appstoreButton, 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', '#3b82f6');
+        appstoreButton.addEventListener('click', () => {
+            window.open(`https://apps.dealeron.com/clients?query=${dealerId}`, '_blank');
+        });
+
+        // Append top row buttons in order (Dash, IntroWidget, Appstore)
+        bentoGrid2.appendChild(dashButton);
+        bentoGrid2.appendChild(introWidgetButton);
+        bentoGrid2.appendChild(appstoreButton);
+
+        // Create exactly 3 TBD buttons for bottom row (unchanged)
+        for (let i = 0; i < 3; i++) {
+            const tbdButton = document.createElement('button');
+            tbdButton.textContent = 'TBD';
+            tbdButton.style.cssText = `
                 padding: 8px;
                 font-size: 11px;
-                cursor: pointer;
-                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-                color: #fff;
+                cursor: not-allowed;
+                background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+                color: rgba(255, 255, 255, 0.6);
                 border: none;
                 border-radius: 8px;
                 font-weight: 600;
                 font-family: inherit;
+                opacity: 0.7;
             `;
-            addButtonHoverEffects(dashButton, 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', '#3b82f6');
-            dashButton.addEventListener('click', () => window.open(cmsUrl, '_blank'));
+            bentoGrid3.appendChild(tbdButton);
+        }
 
-            const headerButton = document.createElement('button');
-            headerButton.textContent = 'IntroWidget';
-            headerButton.style.cssText = `
-                padding: 8px;
-                font-size: 11px;
-                cursor: pointer;
-                background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                font-weight: 600;
-                font-family: inherit;
-            `;
-            addButtonHoverEffects(headerButton, 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', '#3b82f6');
-            headerButton.addEventListener('click', () => {
-                window.open(`https://cms.dealeron.com/dash/dist/cms/#/${dealerId}/headerWidget`, '_blank');
-            });
+    } else {
+        // Restore original buttons (keep existing logic, no changes needed)
+        bentoGrid2.style.gridTemplateColumns = 'repeat(3, 1fr)';
+        bentoGrid3.style.gridTemplateColumns = 'repeat(3, 1fr)';
 
-            const buttons = [dashButton, headerButton];
-            for (let i = 0; i < 4; i++) {
-                const tbd = document.createElement('button');
-                tbd.textContent = 'TBD';
-                tbd.style.cssText = `
-                    padding: 8px;
-                    font-size: 11px;
-                    cursor: not-allowed;
-                    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-                    color: rgba(255, 255, 255, 0.6);
-                    border: none;
-                    border-radius: 8px;
-                    font-weight: 600;
-                    font-family: inherit;
-                    opacity: 0.7;
-                `;
-                buttons.push(tbd);
-            }
+        // CMS button (hover only, no click)
+        const cmsButton = document.createElement('button');
+        cmsButton.id = 'cmsButton';
+        cmsButton.textContent = 'CMS';
+        cmsButton.style.cssText = `
+            padding: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #19325d;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: inherit;
+            position: relative;
+        `;
+        const hoverIndicator = document.createElement('span');
+        hoverIndicator.innerHTML = ' ▼';
+        hoverIndicator.style.cssText = `
+            font-size: 8px;
+            opacity: 0.6;
+            margin-left: 2px;
+        `;
+        cmsButton.appendChild(hoverIndicator);
+        addButtonHoverEffects(cmsButton, '#19325d', '#2a4a8d');
+        // no click handler
 
-            // First 3 in row 2
-            bentoGrid2.appendChild(buttons[0]);
-            bentoGrid2.appendChild(buttons[1]);
-            bentoGrid2.appendChild(buttons[2]);
-            // Last 3 in row 3
-            bentoGrid3.appendChild(buttons[3]);
-            bentoGrid3.appendChild(buttons[4]);
-            bentoGrid3.appendChild(buttons[5]);
-        } else {
-            // ---------------- ORIGINAL BUTTONS (CMS, Refresh, Blocks / Mobile, Styles, Overrides) ----------------
-            bentoGrid2.style.gridTemplateColumns = 'repeat(3, 1fr)';
-            bentoGrid3.style.gridTemplateColumns = 'repeat(3, 1fr)';
-
-            // CMS (hover-only, no click link)
-            const cmsButton = document.createElement('button');
-            cmsButton.id = 'cmsButton';
-            cmsButton.textContent = 'CMS';
-            cmsButton.style.cssText = `
-                padding: 8px;
-                font-size: 11px;
-                cursor: pointer;
-                background: #19325d;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                font-weight: 600;
-                font-family: inherit;
-                position: relative;
-            `;
-            const hoverIndicator = document.createElement('span');
-            hoverIndicator.innerHTML = ' ▼';
-            hoverIndicator.style.cssText = `
-                font-size: 8px;
-                opacity: 0.6;
-                margin-left: 2px;
-            `;
-            cmsButton.appendChild(hoverIndicator);
-            addButtonHoverEffects(cmsButton, '#19325d', '#2a4a8d');
-            // Note: no click handler
-
-            const refreshButton = document.createElement('button');
-            refreshButton.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
-            refreshButton.style.cssText = `
-                padding: 8px;
-                font-size: 11px;
-                cursor: pointer;
-                background: #19325d;
-                color: #fff;
-                border: none;
-                border-radius: 8px;
-                font-weight: 600;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-family: inherit;
-            `;
-            addButtonHoverEffects(refreshButton, '#19325d', '#2a4a8d');
-            refreshButton.addEventListener('click', () => {
-                refreshButton.style.transform = 'rotate(360deg)';
-                const varchar = location.href.indexOf('?') > 0 ? '&' : '?';
-                const randomStr = Math.random().toString(36).substring(2, 7);
-                location.href = location.href + varchar + 'pc=' + randomStr;
-            });
-
+        // Refresh button
+        const refreshButton = document.createElement('button');
+        refreshButton.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>`;
+        refreshButton.style.cssText = `
+            padding: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #19325d;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+        `;
+        addButtonHoverEffects(refreshButton, '#19325d', '#2a4a8d');
+        refreshButton.addEventListener('click', () => {
+            refreshButton.style.transform = 'rotate(360deg)';
+            const varchar = location.href.indexOf('?') > 0 ? '&' : '?';
+            const randomStr = Math.random().toString(36).substring(2, 7);
+            location.href = location.href + varchar + 'pc=' + randomStr;
+        });
             const showBlocksButton = document.createElement('button');
             showBlocksButton.textContent = 'Blocks';
             showBlocksButton.style.cssText = `
