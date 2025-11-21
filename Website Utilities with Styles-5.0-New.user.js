@@ -9,7 +9,54 @@
 
 (function () {
     "use strict";
+// ====================================================================
+// SECTION 0A: UPDATE CHECKING CONFIGURATION
+// ====================================================================
 
+const UPDATE_CONFIG = {
+    CURRENT_VERSION: '5.0', // Adjust to match your current version
+    GITHUB_URL: 'https://github.com/lazyasspanda/Website-Utilities/raw/refs/heads/main/Website%20Utilities%20with%20Styles-5.0-New.user.js',
+    CHECK_INTERVAL: 6 * 60 * 60 * 1000, // 24 hours
+};
+
+/**
+ * Check for script updates from GitHub using Tampermonkey native GM_xmlhttpRequest.
+ * This works around fetch() issues in some browsers with GitHub CORS.
+ */
+function checkForUpdates() {
+    // You can create a button with id 'checkUpdatesBtn' in your UI if desired.
+    // For demonstration, console logs only.
+
+    console.log('Checking for updates...');
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url: UPDATE_CONFIG.GITHUB_URL + '?t=' + Date.now(),
+        onload: function(response) {
+            if (response.status !== 200) {
+                console.log('[Update] GitHub request failed:', response.status);
+                return;
+            }
+            const scriptContent = response.responseText;
+            const match = scriptContent.match(/@version\s+([0-9.]+)/);
+            const latestVersion = match ? match[1] : null;
+
+            console.log(`[Update] Current: v${UPDATE_CONFIG.CURRENT_VERSION}, Latest GitHub: v${latestVersion}`);
+
+            if (latestVersion && latestVersion !== UPDATE_CONFIG.CURRENT_VERSION) {
+                console.log(`[Update] ✓ New version ${latestVersion} available!`);
+                alert(`Update Available!\n\nCurrent: v${UPDATE_CONFIG.CURRENT_VERSION}\nLatest: v${latestVersion}\n\nPlease update your userscript.`);
+                // Optionally add UI actions to trigger update or redirect to GitHub.
+            } else {
+                console.log(`[Update] ✓ Already up to date.`);
+            }
+        },
+        onerror: function(error) {
+            console.log('[Update] Check failed:', error);
+        }
+    });
+}
+
+// Optionally invoke checkForUpdates() during your script init or on demand.
     // ============================================================================
     // SECTION 1: GLOBAL VARIABLES & STATE MANAGEMENT
     // ============================================================================
