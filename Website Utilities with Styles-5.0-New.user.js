@@ -20,7 +20,7 @@
 // ====================================================================
 
 const UPDATE_CONFIG = {
-    CURRENT_VERSION: '5.0', // Adjust to match your current version
+    CURRENT_VERSION: '5.1', // Adjust to match your current version
     GITHUB_URL: 'https://github.com/lazyasspanda/Website-Utilities/raw/refs/heads/main/Website%20Utilities%20with%20Styles-5.0-New.user.js',
     CHECK_INTERVAL: 6 * 60 * 60 * 1000, // 24 hours
 };
