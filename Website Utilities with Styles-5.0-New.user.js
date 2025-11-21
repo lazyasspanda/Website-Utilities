@@ -4,7 +4,13 @@
 // @version     5.1
 // @author      Pratik Chabria
 // @match       *://*/*
-// @grant       none
+// @grant        GM_xmlhttpRequest
+// @grant        GM_getValue
+// @grant        GM_setValue
+// @connect      raw.githubusercontent.com
+// @updateURL    https://github.com/lazyasspanda/Website-Utilities/raw/refs/heads/main/Website%20Utilities%20with%20Styles-5.0-New.user.js
+// @downloadURL  https://github.com/lazyasspanda/Website-Utilities/raw/refs/heads/main/Website%20Utilities%20with%20Styles-5.0-New.user.js
+// @homepageURL  https://github.com/lazyasspanda/Website-Utilities
 // ==/UserScript==
 
 (function () {
